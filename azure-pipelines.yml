@@ -2,7 +2,7 @@ trigger:
 - main
 
 pool:
-  name: AzureVMPool   # same pool you used for Angular
+  name: AzureVMPool   # your self-hosted VM agent pool
 
 steps:
 # Install .NET SDK
@@ -13,21 +13,21 @@ steps:
   displayName: 'Install .NET SDK'
 
 # Restore NuGet packages
-- script: dotnet restore OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj
+- script: dotnet restore OnlineCourseManagement/OnlineCourseManagement.csproj
   displayName: 'Restore NuGet packages'
 
 # Build Web API
-- script: dotnet build OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj -c Release
+- script: dotnet build OnlineCourseManagement/OnlineCourseManagement.csproj -c Release
   displayName: 'Build Web API'
 
 # Publish Web API
-- script: dotnet publish OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+- script: dotnet publish OnlineCourseManagement/OnlineCourseManagement.csproj -c Release -o $(Build.ArtifactStagingDirectory)
   displayName: 'Publish Web API'
 
 # Deploy to Azure App Service
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'OCM-Connection'
-    appName: 'OCM-API'
+    appName: 'your-api-appservice-name'
     package: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Deploy Web API to App Service'
