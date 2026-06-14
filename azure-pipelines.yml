@@ -28,6 +28,6 @@ steps:
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'OCM-Connection'
-    appName: 'your-api-appservice-name'
+    appName: 'OCM-API'
     package: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Deploy Web API to App Service'
