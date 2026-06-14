@@ -1,5 +1,8 @@
 trigger:
-- main
+  branches:
+    include:
+      - main
+      - master
 
 pool:
   name: AzureVMPool   # your self-hosted VM agent pool
