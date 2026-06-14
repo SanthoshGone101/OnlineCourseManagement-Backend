@@ -1,0 +1,33 @@
+trigger:
+- main
+
+pool:
+  name: AzureVM-Pool   # same pool you used for Angular
+
+steps:
+# Install .NET SDK
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.0.x'
+  displayName: 'Install .NET SDK'
+
+# Restore dependencies
+- script: dotnet restore OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj
+  displayName: 'Restore NuGet packages'
+
+# Build Web API
+- script: dotnet build OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj -c Release
+  displayName: 'Build Web API'
+
+# Publish Web API
+- script: dotnet publish OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj -c Release -o $(Build.ArtifactStagingDirectory)
+  displayName: 'Publish Web API'
+
+# Deploy to Azure App Service
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'OCM-Connection'
+    appName: 'OCM-API'
+    package: '$(Build.ArtifactStagingDirectory)'
+  displayName: 'Deploy Web API to App Service'
