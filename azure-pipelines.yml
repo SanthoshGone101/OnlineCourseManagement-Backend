@@ -12,7 +12,7 @@ steps:
     version: '8.0.x'
   displayName: 'Install .NET SDK'
 
-# Restore dependencies
+# Restore NuGet packages
 - script: dotnet restore OnlineCourseManagement.WebAPI/OnlineCourseManagement.WebAPI.csproj
   displayName: 'Restore NuGet packages'
 
