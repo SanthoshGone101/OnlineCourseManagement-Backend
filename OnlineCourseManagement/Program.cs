@@ -4,10 +4,14 @@ using Microsoft.IdentityModel.Tokens;
 using OnlineCourseManagement.Data;
 using OnlineCourseManagement.Services;
 using System.Text;
+using Azure.Identity;
+using Microsoft.Extensions.Configuration.AzureKeyVault;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -50,9 +54,11 @@ builder.Services.AddDbContext<CourseDbContext>(options =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
-        policy => policy.WithOrigins("http://localhost:4200")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod());
+        policy => policy.WithOrigins("http://localhost:4200",
+                   "https://ocmstoragefrontend.z29.web.core.windows.net")
+      .AllowAnyHeader()
+      .AllowAnyMethod());
+
 });
 // Add Authentication
 builder.Services.AddAuthentication(options =>
@@ -75,6 +81,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<JwtService>();
 
@@ -82,7 +89,7 @@ builder.Services.AddScoped<JwtService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
